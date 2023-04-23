@@ -11,13 +11,17 @@ namespace enemies
 
         private void Awake()
         {
+            if (locomotion == null) locomotion = GetComponent<EnemyLocomotion>();
+        }
+
+        private void Start()
+        {
             if (playerTransform == null)
             {
                 playerTransform = ResourcesManager.Instance.PlayerTransform;
             }
+            locomotion.StartRunning(playerTransform);
         }
-
-
     }
 }
 
