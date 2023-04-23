@@ -9,7 +9,7 @@ public class EnemyLocomotion : MonoBehaviour
     [SerializeField] Rigidbody rb;
     [SerializeField] float speed;
     [SerializeField] bool canRun;
-    Transform target;
+    [SerializeField] Transform target;
 
     float limitDistance = 0;
 
@@ -46,11 +46,14 @@ public class EnemyLocomotion : MonoBehaviour
 
     private void Move()
     {
-        Vector3 direction = transform.right;
-        rb.velocity = direction.normalized * speed;
-        if (Vector3.Distance(transform.position, target.position) <= limitDistance)
+        if (target != null)
         {
-            onCloseEnought?.Invoke();
+            Vector3 direction = transform.right;
+            rb.velocity = direction.normalized * speed;
+            if (Vector3.Distance(transform.position, target.position) <= limitDistance)
+            {
+                onCloseEnought?.Invoke();
+            }
         }
     }
 }
