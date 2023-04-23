@@ -24,7 +24,14 @@ namespace enemies
             {
                 locomotion.StopRunning();
             };
-            locomotion.StartRunning(playerTransform);
+
+            locomotion.onFarEnought += () =>
+            {
+                locomotion.StartRunning();
+            };
+
+            locomotion.Init(playerTransform, 3f);
+            locomotion.StartRunning();
         }
     }
 }

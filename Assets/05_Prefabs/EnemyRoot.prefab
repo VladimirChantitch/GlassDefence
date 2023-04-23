@@ -177,8 +177,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 6109741507511989347}
-  speed: 2
+  speed: 5
   canRun: 0
+  target: {fileID: 0}
+  gravityIntensity: -1
 --- !u!1 &5637143017515704902
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,10 +10,12 @@ public class EnemyLocomotion : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] bool canRun;
     [SerializeField] Transform target;
+    [SerializeField] float gravityIntensity = 150;
 
     float limitDistance = 0;
 
     public event Action onCloseEnought;
+    public event Action onFarEnought;
 
     private void Awake()
     {
@@ -26,7 +28,7 @@ public class EnemyLocomotion : MonoBehaviour
         this.limitDistance = limitDistance;
     }
 
-    public void StartRunning(Transform target)
+    public void StartRunning()
     {
         canRun = true;
     }
@@ -42,14 +44,22 @@ public class EnemyLocomotion : MonoBehaviour
         {
             Move();
         }
+        else
+        {
+            if (Vector3.Distance(transform.position, target.position) > limitDistance)
+            {
+                onFarEnought?.Invoke();
+            }
+        }
     }
 
     private void Move()
     {
         if (target != null)
         {
-            Vector3 direction = transform.right;
-            rb.velocity = direction.normalized * speed;
+            Vector3 direction = transform.right * speed;
+            direction.y = rb.velocity.y + gravityIntensity;
+            rb.velocity = direction;
             if (Vector3.Distance(transform.position, target.position) <= limitDistance)
             {
                 onCloseEnought?.Invoke();
