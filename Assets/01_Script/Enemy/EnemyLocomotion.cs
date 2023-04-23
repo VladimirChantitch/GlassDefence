@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,15 +11,24 @@ public class EnemyLocomotion : MonoBehaviour
     [SerializeField] bool canRun;
     Transform target;
 
+    float limitDistance = 0;
+
+    public event Action onCloseEnought;
+
     private void Awake()
     {
         if (rb == null) rb = GetComponent<Rigidbody>(); 
     }
 
+    public void Init(Transform target, float limitDistance)
+    {
+        this.target = target;
+        this.limitDistance = limitDistance;
+    }
+
     public void StartRunning(Transform target)
     {
         canRun = true;
-        this.target = target;
     }
 
     public void StopRunning()
@@ -38,5 +48,9 @@ public class EnemyLocomotion : MonoBehaviour
     {
         Vector3 direction = transform.right;
         rb.velocity = direction.normalized * speed;
+        if (Vector3.Distance(transform.position, target.position) <= limitDistance)
+        {
+            onCloseEnought?.Invoke();
+        }
     }
 }

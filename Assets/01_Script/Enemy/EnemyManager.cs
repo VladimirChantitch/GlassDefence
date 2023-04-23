@@ -20,6 +20,10 @@ namespace enemies
             {
                 playerTransform = ResourcesManager.Instance.PlayerTransform;
             }
+            locomotion.onCloseEnought += () =>
+            {
+                locomotion.StopRunning();
+            };
             locomotion.StartRunning(playerTransform);
         }
     }
