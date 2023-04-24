@@ -29,7 +29,11 @@ namespace player
         [SerializeField] InputManager inputManager;
         [SerializeField] PlayerLocomotion locomotion;
         [SerializeField] MouseBehavior mouseBehavior;
+
+        [Header("Rotation")]
         [SerializeField] PlayerHeadRotation headRotation;
+        [SerializeField] PlayerBodyRotation bodyRotation;
+        [SerializeField] bool isFacingLeft = false;
         [SerializeField] Camera camera;
 
         [SerializeField] string Name;
@@ -47,6 +51,20 @@ namespace player
         private void Start()
         {
             SubscriteToInputs();
+            SubscribeToMouseBehavior();
+            SubscribeToBodyRotation();
+        }
+
+        private void SubscribeToBodyRotation()
+        {
+            bodyRotation.onIsFacingLeft += () => isFacingLeft = true;
+            bodyRotation.onIsFacingRight += () => isFacingLeft = false;
+        }
+
+        private void SubscribeToMouseBehavior()
+        {
+            mouseBehavior.CrossAirPositionChanged += position => HandleCrossAirPosition(position);
+            mouseBehavior.Init(camera);
         }
 
         private void SubscriteToInputs()
@@ -69,9 +87,6 @@ namespace player
             {
                 Debug.Log($"<color=red> NO INPUT MANAGER IN PLAYER MANAGER</color>");
             }
-
-            mouseBehavior.CrossAirPositionChanged += position => HandleCrossAirPosition(position);
-            mouseBehavior.Init(camera);
         }
 
         private void OnInteract()
@@ -118,6 +133,7 @@ namespace player
 
         private void HandleCrossAirPosition(Transform transform)
         {
+            bodyRotation.RotateBody(transform.position, isFacingLeft);
             headRotation.RotateHeadTowardCrosAir(transform.position);
         }
     }
