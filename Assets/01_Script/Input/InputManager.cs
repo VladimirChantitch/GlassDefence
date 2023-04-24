@@ -33,6 +33,19 @@ namespace inputs
         ///     mind that unity event are 100 times slower.
         /// </summary>
         public event Action onInteractPressed;
+        public event Action onDashPressed;
+
+        public event Action onSlotOneSelected;
+        public event Action onSlotTwoSelected;
+        public event Action onSlotThreeSelected;
+        public event Action onSpecialPressed;
+        public event Action onPrimaryPressed;
+        public event Action onPrimaryRealesed;
+
+        public event Action<Vector2> onMovePressed;
+        Vector2 motion;
+
+        public event Action onEscapePressed;
 
         private void Awake()
         {
@@ -49,6 +62,31 @@ namespace inputs
         private void BindInputs()
         {
             inputs.Interaction.Interact.performed += i => onInteractPressed?.Invoke();
+            inputs.Locomotion.Dash.performed += i => onDashPressed?.Invoke();
+            inputs.Locomotion.Move.performed += i => motion = i.ReadValue<Vector2>();
+
+            inputs.Combat.Slot_1.performed += i => onSlotOneSelected?.Invoke();
+            inputs.Combat.Slot_2.performed += i => onSlotTwoSelected?.Invoke();
+            inputs.Combat.Slot_3.performed += i => onSlotThreeSelected?.Invoke();
+            inputs.Combat.Special.performed += i => onSpecialPressed?.Invoke();
+
+            inputs.Combat.MainAttack.performed += i => onPrimaryPressed?.Invoke();
+            inputs.Combat.MainAttack.canceled += i => onPrimaryRealesed?.Invoke();
+
+            inputs.UI.PauseMenu.performed += i => onEscapePressed?.Invoke();
+        }
+
+        private void FixedUpdate()
+        {
+            CheckMotion(motion);
+        }
+
+        public void CheckMotion(Vector2 motion)
+        {
+            if (motion.x != 0 || motion.y != 0)
+            {
+                onMovePressed?.Invoke(motion);
+            }
         }
 
         private void OnDisable()

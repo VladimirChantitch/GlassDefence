@@ -18,17 +18,27 @@
 using inputs;
 using savesystem;
 using savesystem.dto;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace player
 {
-    public class PlayerManager : MonoBehaviour, ISavable
+    public class PlayerManager : MonoBehaviour
     {
         [SerializeField] InputManager inputManager;
+        [SerializeField] PlayerLocomotion locomotion;
 
         [SerializeField] string Name;
+
+        public event Action onEscapePressed;
+
+        private void Awake()
+        {
+            if (locomotion == null) locomotion = GetComponent<PlayerLocomotion>();
+            if (inputManager == null) inputManager = GetComponent<InputManager>();
+        }
 
         private void Start()
         {
@@ -40,6 +50,15 @@ namespace player
             if (inputManager != null)
             {
                 inputManager.onInteractPressed += () => OnInteract();
+                inputManager.onDashPressed += () => HandleDash();
+                inputManager.onEscapePressed += () => onEscapePressed?.Invoke();
+                inputManager.onMovePressed += (motion) => HandleLocomotion(motion);
+                inputManager.onPrimaryPressed += () => HandleStartAttack();
+                inputManager.onPrimaryRealesed += () => HandleStopAtatck();
+                inputManager.onSlotOneSelected += () => HandleSlotSelection(0);
+                inputManager.onSlotTwoSelected += () => HandleSlotSelection(1);
+                inputManager.onSlotThreeSelected += () => HandleSlotSelection(2);
+                inputManager.onSpecialPressed += () => HandleSpecial();
             }
             else
             {
@@ -52,17 +71,35 @@ namespace player
             Debug.Log("Interact");
         }
 
-        public Dto Save()
+        private void HandleDash()
         {
-            return new PlayerDto() { Name = Name };
+            Debug.Log("Dash");
         }
 
-        public void Load(Dto dto)
+        private void HandleLocomotion(Vector2 motion)
         {
-            if (dto is PlayerDto playerDto)
-            {
-                Name = playerDto.Name;
-            }
+            Debug.Log("Motion ::: " + motion);
+            locomotion.Move(motion);
+        }
+
+        private void HandleStartAttack()
+        {
+            Debug.Log("Start Attack");
+        }
+
+        private void HandleStopAtatck()
+        {
+            Debug.Log("Stop Attack");
+        }
+
+        private void HandleSlotSelection(int v)
+        {
+            Debug.Log($"The current slot is {v + 1}");
+        }
+
+        private void HandleSpecial()
+        {
+            Debug.Log("Special");
         }
     }
 }
