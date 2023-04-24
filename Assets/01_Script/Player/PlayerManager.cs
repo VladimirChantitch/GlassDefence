@@ -87,9 +87,9 @@ namespace player
                 inputManager.onMovePressed += (motion) => HandleLocomotion(motion);
                 inputManager.onPrimaryPressed += () => HandleStartAttack();
                 inputManager.onPrimaryRealesed += () => HandleStopAtatck();
-                inputManager.onSlotOneSelected += () => HandleSlotSelection(AttackType.One);
-                inputManager.onSlotTwoSelected += () => HandleSlotSelection(AttackType.Two);
-                inputManager.onSlotThreeSelected += () => HandleSlotSelection(AttackType.Three);
+                inputManager.onSlotOneSelected += () => HandleSlotSelection(AttackType.Fire);
+                inputManager.onSlotTwoSelected += () => HandleSlotSelection(AttackType.IcePlasma);
+                inputManager.onSlotThreeSelected += () => HandleSlotSelection(AttackType.Lightning);
                 inputManager.onSpecialPressed += () => HandleSlotSelection(AttackType.Special);
                 inputManager.onMousePositionChanged += (position) => HandleNewMousePosition(position);
             }
@@ -126,12 +126,11 @@ namespace player
 
         private void HandleSlotSelection(AttackType attackType)
         {
-            Debug.Log($"The current slot is {attackType}");
+            attack.ChangeAttackType(attackType);
         }
 
         private void HandleNewMousePosition(Vector2 position)
         {
-            Debug.Log($"The current mouse position is :: {position}");
             float distance = Vector3.Distance(camera.transform.position, transform.position);
             mouseBehavior.UpdateRealMousePosition(position, distance);
         }

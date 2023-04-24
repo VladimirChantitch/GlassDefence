@@ -14,6 +14,7 @@ public class PlayerAttack : MonoBehaviour
     private void Awake()
     {
         if (playerLaserBeamHandler == null) playerLaserBeamHandler = GetComponent<PlayerLaserBeamHandler>();
+        playerLaserBeamHandler.onVulnerabilityShot += (vulnerability) => vulnerability.DamageVulnerability(-0.5f, currentAttackType);
     }
 
     public void ChangeAttackType(AttackType newAttackType)

@@ -45,8 +45,8 @@ public enum GameState
 
 public enum AttackType
 {
-    One,
-    Two,
-    Three,
+    Fire,
+    IcePlasma,
+    Lightning,
     Special
 }
