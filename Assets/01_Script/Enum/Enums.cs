@@ -42,3 +42,11 @@ public enum GameState
     Win,
     Loose
 }
+
+public enum AttackType
+{
+    One,
+    Two,
+    Three,
+    Special
+}

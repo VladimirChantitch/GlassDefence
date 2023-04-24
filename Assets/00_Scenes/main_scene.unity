@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 4122194}
   - component: {fileID: 4122193}
   - component: {fileID: 4122195}
+  - component: {fileID: 4122196}
   m_Layer: 0
   m_Name: ShootOrigin
   m_TagString: Untagged
@@ -219,6 +220,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c9c1d0a560a8e14eb6020ac72fbe581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerLaserBeamHandler: {fileID: 4122196}
+  isAttacking: 0
+  currentAttackType: 0
+--- !u!114 &4122196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4122190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95c0ae8bb4104e54691a16599a1b6997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxDistance: 15
+  growSpeed: 0.2
+  currentDistance: 0
+  isBeaming: 0
 --- !u!1 &95559057
 GameObject:
   m_ObjectHideFlags: 0
@@ -489,6 +509,7 @@ MonoBehaviour:
     template: {fileID: 9197481963319205126, guid: 1f3ee94d0750ca445b1ac11efe86a9d3, type: 3}
   audioContainers: []
   playerTransform: {fileID: 1184789318}
+  beams: []
 --- !u!4 &285853165
 Transform:
   m_ObjectHideFlags: 0
@@ -2118,7 +2139,7 @@ MonoBehaviour:
   bodyRotation: {fileID: 1531484535}
   isFacingLeft: 0
   camera: {fileID: 559092338}
-  Name: Optix
+  attack: {fileID: 0}
 --- !u!54 &1184789321
 Rigidbody:
   m_ObjectHideFlags: 0

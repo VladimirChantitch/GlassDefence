@@ -26,6 +26,7 @@ namespace player
 {
     public class PlayerManager : MonoBehaviour
     {
+        [Header("Interactions")]
         [SerializeField] InputManager inputManager;
         [SerializeField] PlayerLocomotion locomotion;
         [SerializeField] MouseBehavior mouseBehavior;
@@ -36,7 +37,8 @@ namespace player
         [SerializeField] bool isFacingLeft = false;
         [SerializeField] Camera camera;
 
-        [SerializeField] string Name;
+        [Header("Attack")]
+        [SerializeField] PlayerAttack attack;
 
         public event Action onEscapePressed;
 
@@ -46,6 +48,8 @@ namespace player
             if (inputManager == null) inputManager = GetComponent<InputManager>();
             if (mouseBehavior == null) mouseBehavior = FindObjectOfType<MouseBehavior>();
             if (headRotation == null) headRotation = GetComponentInChildren<PlayerHeadRotation>();
+            if (bodyRotation == null) bodyRotation = GetComponentInChildren<PlayerBodyRotation>();
+            if (attack == null) attack = GetComponentInChildren<PlayerAttack>();
         }
 
         private void Start()
@@ -53,6 +57,12 @@ namespace player
             SubscriteToInputs();
             SubscribeToMouseBehavior();
             SubscribeToBodyRotation();
+            SubscribeToAttack();
+        }
+
+        private void SubscribeToAttack()
+        {
+            attack.onAttackReset += () => HandleStartAttack();
         }
 
         private void SubscribeToBodyRotation()
@@ -77,10 +87,10 @@ namespace player
                 inputManager.onMovePressed += (motion) => HandleLocomotion(motion);
                 inputManager.onPrimaryPressed += () => HandleStartAttack();
                 inputManager.onPrimaryRealesed += () => HandleStopAtatck();
-                inputManager.onSlotOneSelected += () => HandleSlotSelection(0);
-                inputManager.onSlotTwoSelected += () => HandleSlotSelection(1);
-                inputManager.onSlotThreeSelected += () => HandleSlotSelection(2);
-                inputManager.onSpecialPressed += () => HandleSpecial();
+                inputManager.onSlotOneSelected += () => HandleSlotSelection(AttackType.One);
+                inputManager.onSlotTwoSelected += () => HandleSlotSelection(AttackType.Two);
+                inputManager.onSlotThreeSelected += () => HandleSlotSelection(AttackType.Three);
+                inputManager.onSpecialPressed += () => HandleSlotSelection(AttackType.Special);
                 inputManager.onMousePositionChanged += (position) => HandleNewMousePosition(position);
             }
             else
@@ -106,22 +116,17 @@ namespace player
 
         private void HandleStartAttack()
         {
-            Debug.Log("Start Attack");
+            attack.StartAttack(mouseBehavior.transform);
         }
 
         private void HandleStopAtatck()
         {
-            Debug.Log("Stop Attack");
+            attack.StopAttack();
         }
 
-        private void HandleSlotSelection(int v)
+        private void HandleSlotSelection(AttackType attackType)
         {
-            Debug.Log($"The current slot is {v + 1}");
-        }
-
-        private void HandleSpecial()
-        {
-            Debug.Log("Special");
+            Debug.Log($"The current slot is {attackType}");
         }
 
         private void HandleNewMousePosition(Vector2 position)

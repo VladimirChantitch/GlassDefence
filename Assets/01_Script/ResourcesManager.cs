@@ -187,4 +187,26 @@ public class ResourcesManager : MonoBehaviour
     [SerializeField] Transform playerTransform;
     public Transform PlayerTransform { get => playerTransform; }
     #endregion
+
+    #region Attack INfo
+    [SerializeField] List<BeamDrawer> beams = new List<BeamDrawer>();
+
+    public BeamDrawer GetAttack(AttackType attackType)
+    {
+        BeamDrawer beam = beams.Find(b => b.attackType == attackType);
+        if(beam == null)
+        {
+            Debug.Log($"The beam of type {attackType} dosent exist");
+        }
+        return beam;
+    }
+
+    [Serializable]
+    public class BeamDrawer
+    {
+        public AttackType attackType;
+        public Color color;
+    }
+
+    #endregion
 }
