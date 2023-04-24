@@ -45,6 +45,8 @@ namespace inputs
         public event Action<Vector2> onMovePressed;
         Vector2 motion;
 
+        public event Action<Vector2> onMousePositionChanged;
+
         public event Action onEscapePressed;
 
         private void Awake()
@@ -72,6 +74,8 @@ namespace inputs
 
             inputs.Combat.MainAttack.performed += i => onPrimaryPressed?.Invoke();
             inputs.Combat.MainAttack.canceled += i => onPrimaryRealesed?.Invoke();
+
+            inputs.Combat.MousePosition.performed += i => onMousePositionChanged?.Invoke(i.ReadValue<Vector2>());
 
             inputs.UI.PauseMenu.performed += i => onEscapePressed?.Invoke();
         }

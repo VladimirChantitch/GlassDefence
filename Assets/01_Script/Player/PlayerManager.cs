@@ -17,7 +17,6 @@
 
 using inputs;
 using savesystem;
-using savesystem.dto;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,6 +28,9 @@ namespace player
     {
         [SerializeField] InputManager inputManager;
         [SerializeField] PlayerLocomotion locomotion;
+        [SerializeField] MouseBehavior mouseBehavior;
+        [SerializeField] PlayerHeadRotation headRotation;
+        [SerializeField] Camera camera;
 
         [SerializeField] string Name;
 
@@ -38,6 +40,8 @@ namespace player
         {
             if (locomotion == null) locomotion = GetComponent<PlayerLocomotion>();
             if (inputManager == null) inputManager = GetComponent<InputManager>();
+            if (mouseBehavior == null) mouseBehavior = FindObjectOfType<MouseBehavior>();
+            if (headRotation == null) headRotation = GetComponentInChildren<PlayerHeadRotation>();
         }
 
         private void Start()
@@ -59,11 +63,15 @@ namespace player
                 inputManager.onSlotTwoSelected += () => HandleSlotSelection(1);
                 inputManager.onSlotThreeSelected += () => HandleSlotSelection(2);
                 inputManager.onSpecialPressed += () => HandleSpecial();
+                inputManager.onMousePositionChanged += (position) => HandleNewMousePosition(position);
             }
             else
             {
                 Debug.Log($"<color=red> NO INPUT MANAGER IN PLAYER MANAGER</color>");
             }
+
+            mouseBehavior.CrossAirPositionChanged += position => HandleCrossAirPosition(position);
+            mouseBehavior.Init(camera);
         }
 
         private void OnInteract()
@@ -78,7 +86,6 @@ namespace player
 
         private void HandleLocomotion(Vector2 motion)
         {
-            Debug.Log("Motion ::: " + motion);
             locomotion.Move(motion);
         }
 
@@ -100,6 +107,18 @@ namespace player
         private void HandleSpecial()
         {
             Debug.Log("Special");
+        }
+
+        private void HandleNewMousePosition(Vector2 position)
+        {
+            Debug.Log($"The current mouse position is :: {position}");
+            float distance = Vector3.Distance(camera.transform.position, transform.position);
+            mouseBehavior.UpdateRealMousePosition(position, distance);
+        }
+
+        private void HandleCrossAirPosition(Transform transform)
+        {
+            headRotation.RotateHeadTowardCrosAir(transform.position);
         }
     }
 }

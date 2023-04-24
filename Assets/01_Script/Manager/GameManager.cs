@@ -35,7 +35,7 @@ namespace game_manager
         [SerializeField] SoundManager soundManager = null;
         [SerializeField] PlayerManager playerManager = null;
         [SerializeField] SceneHandler sceneHandler = null;
-        [SerializeField] JSONSaveManager saveManager = null;
+        [SerializeField] RealmSaveManager saveManager = null;
 
         GameScene sceneState;
         GameState gameState;
@@ -46,7 +46,7 @@ namespace game_manager
             if (soundManager == null) soundManager = GetComponentInChildren<SoundManager>();
             if (playerManager == null) playerManager = FindObjectOfType<PlayerManager>();
             if (sceneHandler == null) sceneHandler = GetComponentInChildren<SceneHandler>();
-            if(saveManager == null) saveManager = GetComponentInChildren<JSONSaveManager>();
+            if(saveManager == null) saveManager = GetComponentInChildren<RealmSaveManager>();
 
             sceneState = ResourcesManager.Instance.SceneState;
             gameState = ResourcesManager.Instance.GameState;
@@ -91,22 +91,6 @@ namespace game_manager
         private void ChangeTemplate()
         {
             uiManager.ChangeUITemplate();
-        }
-
-        /// <summary>
-        /// A method to call a save
-        /// </summary>
-        public void SaveGame()
-        {
-            saveManager.SaveGame();
-        }
-
-        /// <summary>
-        /// A method to call a load
-        /// </summary>
-        public void LoadGame()
-        {
-            saveManager.LoadGame();
         }
         #endregion
     }

@@ -219,6 +219,15 @@ public partial class @Inputs : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MousePosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""4fbca927-f7f9-44af-98c3-06b45506aa93"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -276,6 +285,17 @@ public partial class @Inputs : IInputActionCollection2, IDisposable
                     ""action"": ""Special"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a977cc68-e29e-47bd-8cc2-b7c9b91dc35a"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MousePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -299,6 +319,7 @@ public partial class @Inputs : IInputActionCollection2, IDisposable
         m_Combat_Slot_2 = m_Combat.FindAction("Slot_2", throwIfNotFound: true);
         m_Combat_Slot_3 = m_Combat.FindAction("Slot_3", throwIfNotFound: true);
         m_Combat_Special = m_Combat.FindAction("Special", throwIfNotFound: true);
+        m_Combat_MousePosition = m_Combat.FindAction("MousePosition", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -470,6 +491,7 @@ public partial class @Inputs : IInputActionCollection2, IDisposable
     private readonly InputAction m_Combat_Slot_2;
     private readonly InputAction m_Combat_Slot_3;
     private readonly InputAction m_Combat_Special;
+    private readonly InputAction m_Combat_MousePosition;
     public struct CombatActions
     {
         private @Inputs m_Wrapper;
@@ -479,6 +501,7 @@ public partial class @Inputs : IInputActionCollection2, IDisposable
         public InputAction @Slot_2 => m_Wrapper.m_Combat_Slot_2;
         public InputAction @Slot_3 => m_Wrapper.m_Combat_Slot_3;
         public InputAction @Special => m_Wrapper.m_Combat_Special;
+        public InputAction @MousePosition => m_Wrapper.m_Combat_MousePosition;
         public InputActionMap Get() { return m_Wrapper.m_Combat; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -503,6 +526,9 @@ public partial class @Inputs : IInputActionCollection2, IDisposable
                 @Special.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnSpecial;
                 @Special.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnSpecial;
                 @Special.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnSpecial;
+                @MousePosition.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnMousePosition;
+                @MousePosition.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnMousePosition;
+                @MousePosition.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnMousePosition;
             }
             m_Wrapper.m_CombatActionsCallbackInterface = instance;
             if (instance != null)
@@ -522,6 +548,9 @@ public partial class @Inputs : IInputActionCollection2, IDisposable
                 @Special.started += instance.OnSpecial;
                 @Special.performed += instance.OnSpecial;
                 @Special.canceled += instance.OnSpecial;
+                @MousePosition.started += instance.OnMousePosition;
+                @MousePosition.performed += instance.OnMousePosition;
+                @MousePosition.canceled += instance.OnMousePosition;
             }
         }
     }
@@ -546,5 +575,6 @@ public partial class @Inputs : IInputActionCollection2, IDisposable
         void OnSlot_2(InputAction.CallbackContext context);
         void OnSlot_3(InputAction.CallbackContext context);
         void OnSpecial(InputAction.CallbackContext context);
+        void OnMousePosition(InputAction.CallbackContext context);
     }
 }
