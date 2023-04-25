@@ -15,6 +15,9 @@ public class MouseBehavior : MonoBehaviour
         Cursor.visible = false;
     }
 
+    [SerializeField] Vector2 lastPos;
+    [SerializeField] float lastDist;
+
     private void UpdateCrossAirPosition(Vector3 position, float distanceToPlayer)
     {
         position.z = distanceToPlayer;
@@ -26,6 +29,13 @@ public class MouseBehavior : MonoBehaviour
 
     internal void UpdateRealMousePosition(Vector2 position, float distanceToPlayer)
     {
+        lastPos = position;
+        lastDist = distanceToPlayer;
         UpdateCrossAirPosition(position, distanceToPlayer);
+    }
+
+    private void FixedUpdate()
+    {
+        UpdateCrossAirPosition(lastPos, lastDist);
     }
 }

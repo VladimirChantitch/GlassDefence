@@ -6,7 +6,9 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] PlayerLaserBeamHandler playerLaserBeamHandler;
+    [SerializeField] PlayerDashCollider playerDashCollider;
     [SerializeField] bool isAttacking;
+    [SerializeField] bool isDashing;
     [SerializeField] AttackType currentAttackType;
 
     public event Action onAttackReset;
@@ -29,11 +31,27 @@ public class PlayerAttack : MonoBehaviour
 
     internal void StartAttack(Transform target)
     {
-        playerLaserBeamHandler.StartLaserBeam(target, ResourcesManager.Instance.GetAttack(currentAttackType));
+        if (!isDashing)
+        {
+            playerLaserBeamHandler.StartLaserBeam(target, ResourcesManager.Instance.GetAttack(currentAttackType));
+        }
     }
 
     internal void StopAttack()
     {
         playerLaserBeamHandler.StopLaserBeam();
+    }
+
+    public void StartDashAttack()
+    {
+        isDashing = true;
+        playerDashCollider.OpenCollider();
+        StopAttack();
+    }
+
+    public void StopDashAttack()
+    {
+        isDashing = false;
+        playerDashCollider.CloseCollider();
     }
 }

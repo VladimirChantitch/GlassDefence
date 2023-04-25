@@ -58,6 +58,7 @@ namespace player
             SubscribeToMouseBehavior();
             SubscribeToBodyRotation();
             SubscribeToAttack();
+            SubscribeToLocomotion();
         }
 
         private void SubscribeToAttack()
@@ -99,15 +100,36 @@ namespace player
             }
         }
 
+        private void SubscribeToLocomotion()
+        {
+            if(locomotion != null)
+            {
+                locomotion.onDashStarted += () => HandleDashStarted();
+                locomotion.onDashStopped += () => HandleDashStopped();
+            }
+        }
+
         private void OnInteract()
         {
             Debug.Log("Interact");
         }
 
+        #region HANDLE DASH
         private void HandleDash()
         {
-            Debug.Log("Dash");
+            locomotion.StartDash();
         }
+
+        private void HandleDashStarted()
+        {
+            attack.StartDashAttack();
+        }
+
+        private void HandleDashStopped()
+        {
+            attack.StopDashAttack();
+        }
+        #endregion
 
         private void HandleLocomotion(Vector2 motion)
         {
