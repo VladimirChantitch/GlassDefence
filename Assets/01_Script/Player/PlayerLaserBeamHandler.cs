@@ -11,22 +11,22 @@ public class PlayerLaserBeamHandler : MonoBehaviour
     [SerializeField] bool isBeaming;
     [SerializeField] bool isSpecial;
 
-    ResourcesManager.BeamDrawer currentBeamDrawer;
-    ResourcesManager.BeamDrawer specialBeamDrawer;
+    [SerializeField] PlayerAttackSlot currentBeamDrawer;
+    [SerializeField] PlayerAttackSlot specialBeamDrawer;
 
     public event Action<EnemyVulnerability> onVulnerabilityShot;
 
-    internal void StartLaserBeam(Transform target, ResourcesManager.BeamDrawer beamDrawer)
+    internal void StartLaserBeam(Transform target, PlayerAttackSlot playerAttackSlot)
     {
         isBeaming = true;
-        if (beamDrawer.attackType == AttackType.Special)
+        if (playerAttackSlot.AttackType == AttackType.Special)
         {
             isSpecial = true;
-            specialBeamDrawer = beamDrawer;
+            specialBeamDrawer = playerAttackSlot;
         }
         else
         {
-            this.currentBeamDrawer = beamDrawer;
+            this.currentBeamDrawer = playerAttackSlot;
         }
     }
 

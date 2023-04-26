@@ -9,36 +9,59 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] PlayerDashCollider playerDashCollider;
     [SerializeField] bool isAttacking;
     [SerializeField] bool isDashing;
+    [SerializeField] bool isSpecialAttack;
     [SerializeField] AttackType currentAttackType;
 
+    PlayerAttackSlot playerAttackSlot;
+
     public event Action onAttackReset;
+    public event Action<float> onSpecialAttackStarted;
 
     private void Awake()
     {
         if (playerLaserBeamHandler == null) playerLaserBeamHandler = GetComponent<PlayerLaserBeamHandler>();
-        playerLaserBeamHandler.onVulnerabilityShot += (vulnerability) => vulnerability.DamageVulnerability(-0.5f, currentAttackType);
+        playerLaserBeamHandler.onVulnerabilityShot += (vulnerability) => vulnerability.DamageVulnerability(playerAttackSlot.Damage, GetCurrentAttackType());
     }
 
     public void ChangeAttackType(AttackType newAttackType)
     {
         currentAttackType = newAttackType;
-        if (isAttacking)
+        if (isAttacking && !isSpecialAttack)
         {
             StopAttack();
             onAttackReset?.Invoke();
+            return;
         }
     }
 
-    internal void StartAttack(Transform target)
+    public void StartAttack(Transform target)
     {
-        if (!isDashing)
+        if (!isDashing && !isSpecialAttack)
         {
-            playerLaserBeamHandler.StartLaserBeam(target, ResourcesManager.Instance.GetAttack(currentAttackType));
+            isAttacking = true;
+            playerAttackSlot = ResourcesManager.Instance.GetAttack(currentAttackType);
+            playerLaserBeamHandler.StartLaserBeam(target, playerAttackSlot);
+            if (currentAttackType == AttackType.Special)
+            {
+                isSpecialAttack = true;
+                onSpecialAttackStarted?.Invoke(playerAttackSlot.FuryCost);
+            }
         }
     }
 
-    internal void StopAttack()
+    public void StopAttack()
     {
+        if (!isSpecialAttack)
+        {
+            isAttacking = false;
+            playerLaserBeamHandler.StopLaserBeam();
+        }
+    }
+
+    public void StopSpecialAttack()
+    {
+        isAttacking = false;
+        isSpecialAttack = false;
         playerLaserBeamHandler.StopLaserBeam();
     }
 
@@ -53,5 +76,17 @@ public class PlayerAttack : MonoBehaviour
     {
         isDashing = false;
         playerDashCollider.CloseCollider();
+    }
+
+    private AttackType GetCurrentAttackType()
+    {
+        if (isSpecialAttack)
+        {
+            return AttackType.Special;
+        }
+        else
+        {
+            return currentAttackType;
+        }
     }
 }

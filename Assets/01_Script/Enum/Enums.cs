@@ -48,5 +48,6 @@ public enum AttackType
     Fire,
     IcePlasma,
     Lightning,
-    Special
+    Special,
+    Dash
 }

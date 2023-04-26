@@ -189,24 +189,16 @@ public class ResourcesManager : MonoBehaviour
     #endregion
 
     #region Attack INfo
-    [SerializeField] List<BeamDrawer> beams = new List<BeamDrawer>();
+    [SerializeField] List<PlayerAttackSlot> beams = new List<PlayerAttackSlot>();
 
-    public BeamDrawer GetAttack(AttackType attackType)
+    public PlayerAttackSlot GetAttack(AttackType attackType)
     {
-        BeamDrawer beam = beams.Find(b => b.attackType == attackType);
+        PlayerAttackSlot beam = beams.Find(b => b.AttackType == attackType);
         if(beam == null)
         {
             Debug.Log($"The beam of type {attackType} dosent exist");
         }
         return beam;
     }
-
-    [Serializable]
-    public class BeamDrawer
-    {
-        public AttackType attackType;
-        public Color color;
-    }
-
     #endregion
 }

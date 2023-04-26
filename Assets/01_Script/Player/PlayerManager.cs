@@ -30,6 +30,7 @@ namespace player
         [SerializeField] InputManager inputManager;
         [SerializeField] PlayerLocomotion locomotion;
         [SerializeField] MouseBehavior mouseBehavior;
+        [SerializeField] PlayerStats playerStats;
 
         [Header("Rotation")]
         [SerializeField] PlayerHeadRotation headRotation;
@@ -39,6 +40,7 @@ namespace player
 
         [Header("Attack")]
         [SerializeField] PlayerAttack attack;
+        [SerializeField] PlayerAttackSlot dashSlot;
 
         public event Action onEscapePressed;
 
@@ -50,6 +52,7 @@ namespace player
             if (headRotation == null) headRotation = GetComponentInChildren<PlayerHeadRotation>();
             if (bodyRotation == null) bodyRotation = GetComponentInChildren<PlayerBodyRotation>();
             if (attack == null) attack = GetComponentInChildren<PlayerAttack>();
+            if (playerStats == null) playerStats = GetComponent<PlayerStats>();
         }
 
         private void Start()
@@ -59,11 +62,23 @@ namespace player
             SubscribeToBodyRotation();
             SubscribeToAttack();
             SubscribeToLocomotion();
+            SubscribeToPlayerStats();
+            dashSlot = ResourcesManager.Instance.GetAttack(AttackType.Dash);
+        }
+
+        private void SubscribeToPlayerStats()
+        {
+            if (playerStats != null)
+            {
+                playerStats.onPlayerDied += () => HandlePlayerDeath();
+                playerStats.onFuryDecayFinished += () => HandleFuryDecayFinished();
+            }
         }
 
         private void SubscribeToAttack()
         {
             attack.onAttackReset += () => HandleStartAttack();
+            attack.onSpecialAttackStarted += (decayRate) => HandleSpecialAttackStarted(decayRate);
         }
 
         private void SubscribeToBodyRotation()
@@ -115,19 +130,29 @@ namespace player
         }
 
         #region HANDLE DASH
+        [Header("dash")]
+        [SerializeField] bool isDashing;
         private void HandleDash()
         {
-            locomotion.StartDash();
+            if (!isDashing)
+            {
+                if (playerStats.TryConsumeFury(dashSlot.FuryCost))
+                {
+                    locomotion.StartDash();
+                }
+            }
         }
 
         private void HandleDashStarted()
         {
             attack.StartDashAttack();
+            isDashing = true;
         }
 
         private void HandleDashStopped()
         {
             attack.StopDashAttack();
+            isDashing = false;
         }
         #endregion
 
@@ -136,6 +161,12 @@ namespace player
             locomotion.Move(motion);
         }
 
+        private void HandleFuryDecayFinished()
+        {
+            attack.StopSpecialAttack();
+        }
+
+        #region HANDLE ATTACK
         private void HandleStartAttack()
         {
             attack.StartAttack(mouseBehavior.transform);
@@ -146,8 +177,25 @@ namespace player
             attack.StopAttack();
         }
 
+        private void HandleSpecialAttackStarted(float decayRate)
+        {
+            playerStats.StartDecayFury(decayRate);
+        }
+        #endregion
+
         private void HandleSlotSelection(AttackType attackType)
         {
+            if (attackType == AttackType.Special)
+            {
+                if (playerStats.IsFuryMaxed())
+                {
+                    attack.ChangeAttackType(attackType);
+                }
+                else
+                {
+                    return;
+                }
+            }
             attack.ChangeAttackType(attackType);
         }
 
@@ -161,6 +209,11 @@ namespace player
         {
             bodyRotation.RotateBody(transform.position, isFacingLeft);
             headRotation.RotateHeadTowardCrosAir(transform.position);
+        }
+
+        private void HandlePlayerDeath()
+        {
+            Debug.Log("player Died");
         }
     }
 }
