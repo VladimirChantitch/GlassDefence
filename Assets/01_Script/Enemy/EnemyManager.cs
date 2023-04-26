@@ -50,7 +50,7 @@ namespace enemies
             totalVulnerabilitiesLeft = vulnerabilities.Count;
             foreach(EnemyVulnerability vulnerability in vulnerabilities)
             {
-                vulnerability.onVulnerabilityDestroyed += () =>
+                vulnerability.onVulnerabilityDestroyed += (vuln) =>
                 {
                     HandleDesactivationOfVulnerability(vulnerability);
                 };

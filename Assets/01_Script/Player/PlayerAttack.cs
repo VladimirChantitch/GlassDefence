@@ -91,26 +91,22 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
-    EnemyVulnerability currentVulnerability;
+    List<EnemyVulnerability> currentVulnerabilities = new List<EnemyVulnerability>();
 
     private void HandleVulnerabilityShot(EnemyVulnerability vulnerability)
     {
-        if (currentVulnerability == null)
+        if (!currentVulnerabilities.Contains(vulnerability))
         {
-            currentVulnerability = vulnerability;
-            vulnerability.onVulnerabilityDestroyed += () => HandleVulnerabilityDestroyed();
+            currentVulnerabilities.Add(vulnerability);
+            vulnerability.onVulnerabilityDestroyed += (vuln) => HandleVulnerabilityDestroyed(vuln);
         }
-        else if (currentVulnerability != vulnerability)
-        {
-            currentVulnerability.onVulnerabilityDestroyed -= () => HandleVulnerabilityDestroyed();
-            currentVulnerability = vulnerability;
-            vulnerability.onVulnerabilityDestroyed += () => HandleVulnerabilityDestroyed();
-        }
+
         vulnerability.DamageVulnerability(playerAttackSlot.Damage, GetCurrentAttackType());
     }
 
-    private void HandleVulnerabilityDestroyed()
+    private void HandleVulnerabilityDestroyed(EnemyVulnerability vulnerability)
     {
         onVulnerabilityDestroyed?.Invoke();
+        currentVulnerabilities.Remove(vulnerability);
     }
 }
