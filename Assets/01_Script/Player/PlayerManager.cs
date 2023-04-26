@@ -43,6 +43,7 @@ namespace player
         [Header("Attack")]
         [SerializeField] PlayerAttack attack;
         [SerializeField] PlayerAttackSlot dashSlot;
+        [SerializeField] float furyReward = 5;
 
         public event Action onEscapePressed;
 
@@ -81,6 +82,7 @@ namespace player
         {
             attack.onAttackReset += () => HandleStartAttack();
             attack.onSpecialAttackStarted += (decayRate) => HandleSpecialAttackStarted(decayRate);
+            attack.onVulnerabilityDestroyed += () => HandleVulnerabilityDestroyed();
         }
 
         private void SubscribeToBodyRotation()
@@ -220,6 +222,11 @@ namespace player
         private void HandlePlayerDeath()
         {
             Debug.Log("player Died");
+        }
+
+        private void HandleVulnerabilityDestroyed()
+        {
+            playerStats.GenerateFury(furyReward);
         }
 
         private void FixedUpdate()

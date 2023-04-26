@@ -16,11 +16,12 @@ public class PlayerAttack : MonoBehaviour
 
     public event Action onAttackReset;
     public event Action<float> onSpecialAttackStarted;
+    public event Action onVulnerabilityDestroyed;
 
     private void Awake()
     {
         if (playerLaserBeamHandler == null) playerLaserBeamHandler = GetComponent<PlayerLaserBeamHandler>();
-        playerLaserBeamHandler.onVulnerabilityShot += (vulnerability) => vulnerability.DamageVulnerability(playerAttackSlot.Damage, GetCurrentAttackType());
+        playerLaserBeamHandler.onVulnerabilityShot += (vulnerability) => HandleVulnerabilityShot(vulnerability); 
     }
 
     public void ChangeAttackType(AttackType newAttackType)
@@ -88,5 +89,28 @@ public class PlayerAttack : MonoBehaviour
         {
             return currentAttackType;
         }
+    }
+
+    EnemyVulnerability currentVulnerability;
+
+    private void HandleVulnerabilityShot(EnemyVulnerability vulnerability)
+    {
+        if (currentVulnerability == null)
+        {
+            currentVulnerability = vulnerability;
+            vulnerability.onVulnerabilityDestroyed += () => HandleVulnerabilityDestroyed();
+        }
+        else if (currentVulnerability != vulnerability)
+        {
+            currentVulnerability.onVulnerabilityDestroyed -= () => HandleVulnerabilityDestroyed();
+            currentVulnerability = vulnerability;
+            vulnerability.onVulnerabilityDestroyed += () => HandleVulnerabilityDestroyed();
+        }
+        vulnerability.DamageVulnerability(playerAttackSlot.Damage, GetCurrentAttackType());
+    }
+
+    private void HandleVulnerabilityDestroyed()
+    {
+        onVulnerabilityDestroyed?.Invoke();
     }
 }
