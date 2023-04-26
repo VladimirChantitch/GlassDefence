@@ -21,6 +21,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 namespace player
 {
@@ -36,6 +37,7 @@ namespace player
         [SerializeField] PlayerHeadRotation headRotation;
         [SerializeField] PlayerBodyRotation bodyRotation;
         [SerializeField] bool isFacingLeft = false;
+        [SerializeField] bool isKnockedBack = false;
         [SerializeField] Camera camera;
 
         [Header("Attack")]
@@ -161,11 +163,6 @@ namespace player
             locomotion.Move(motion);
         }
 
-        private void HandleFuryDecayFinished()
-        {
-            attack.StopSpecialAttack();
-        }
-
         #region HANDLE ATTACK
         private void HandleStartAttack()
         {
@@ -180,6 +177,15 @@ namespace player
         private void HandleSpecialAttackStarted(float decayRate)
         {
             playerStats.StartDecayFury(decayRate);
+            locomotion.StartKnocBack();
+            isKnockedBack = true;
+        }
+
+        private void HandleFuryDecayFinished()
+        {
+            attack.StopSpecialAttack();
+            locomotion.StopKnocBack();
+            isKnockedBack = false;
         }
         #endregion
 
@@ -214,6 +220,14 @@ namespace player
         private void HandlePlayerDeath()
         {
             Debug.Log("player Died");
+        }
+
+        private void FixedUpdate()
+        {
+            if (isKnockedBack)
+            {
+                locomotion.UpdateKnocBack(bodyRotation.transform.forward);
+            }
         }
     }
 }

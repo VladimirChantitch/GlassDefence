@@ -87,10 +87,10 @@ namespace inputs
 
         public void CheckMotion(Vector2 motion)
         {
-            if (motion.x != 0 || motion.y != 0)
-            {
+            //if (motion.x != 0 || motion.y != 0)
+            //{
                 onMovePressed?.Invoke(motion);
-            }
+            //}
         }
 
         private void OnDisable()
