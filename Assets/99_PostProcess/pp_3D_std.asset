@@ -21,13 +21,13 @@ MonoBehaviour:
     m_Value: 0.9
   intensity:
     m_OverrideState: 1
-    m_Value: 0.05
+    m_Value: 0.1
   scatter:
     m_OverrideState: 1
-    m_Value: 0.247
+    m_Value: 0.132
   clamp:
     m_OverrideState: 1
-    m_Value: 1500
+    m_Value: 1017
   tint:
     m_OverrideState: 1
     m_Value: {r: 0, g: 0, b: 0, a: 1}
@@ -65,7 +65,7 @@ MonoBehaviour:
     m_Value: 2
   intensity:
     m_OverrideState: 1
-    m_Value: 0.303
+    m_Value: 0.233
   response:
     m_OverrideState: 1
     m_Value: 0
@@ -93,10 +93,10 @@ MonoBehaviour:
     m_Value: 15
   gaussianEnd:
     m_OverrideState: 1
-    m_Value: 40
+    m_Value: 40.1
   gaussianMaxRadius:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 0.766
   highQualitySampling:
     m_OverrideState: 1
     m_Value: 0
@@ -133,10 +133,30 @@ MonoBehaviour:
   components:
   - {fileID: -8334684905214927943}
   - {fileID: 3991406335177721418}
-  - {fileID: 7763137022711574760}
   - {fileID: -139741230953835490}
   - {fileID: 3193995088654020719}
   - {fileID: -4621584271517824967}
+  - {fileID: 572358090011613321}
+  - {fileID: 6143080843242858724}
+--- !u!114 &572358090011613321
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 221518ef91623a7438a71fef23660601, type: 3}
+  m_Name: WhiteBalance
+  m_EditorClassIdentifier: 
+  active: 1
+  temperature:
+    m_OverrideState: 1
+    m_Value: 100
+  tint:
+    m_OverrideState: 1
+    m_Value: 0
 --- !u!114 &3193995088654020719
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -181,7 +201,7 @@ MonoBehaviour:
   intensity:
     m_OverrideState: 1
     m_Value: 0.201
---- !u!114 &7763137022711574760
+--- !u!114 &6143080843242858724
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -190,10 +210,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97c23e3b12dc18c42a140437e53d3951, type: 3}
-  m_Name: Tonemapping
+  m_Script: {fileID: 11500000, guid: 66f335fb1ffd8684294ad653bf1c7564, type: 3}
+  m_Name: ColorAdjustments
   m_EditorClassIdentifier: 
-  active: 1
-  mode:
+  active: 0
+  postExposure:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
+  contrast:
+    m_OverrideState: 1
+    m_Value: 11
+  colorFilter:
+    m_OverrideState: 0
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
+  hueShift:
+    m_OverrideState: 0
+    m_Value: -180
+  saturation:
+    m_OverrideState: 1
+    m_Value: 100
