@@ -209,8 +209,7 @@ namespace player
 
         private void HandleNewMousePosition(Vector2 position)
         {
-            float distance = Vector3.Distance(camera.transform.position, transform.position);
-            mouseBehavior.UpdateRealMousePosition(position, distance);
+            mouseBehavior.UpdateRealMousePosition(position);
         }
 
         private void HandleCrossAirPosition(Transform transform)

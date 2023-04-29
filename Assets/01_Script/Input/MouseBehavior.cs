@@ -1,3 +1,4 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ public class MouseBehavior : MonoBehaviour
 {
     public event Action<Transform> CrossAirPositionChanged;
     Camera camera;
+    [SerializeField] float plane;
 
     public void Init(Camera camera)
     {
@@ -27,11 +29,16 @@ public class MouseBehavior : MonoBehaviour
         CrossAirPositionChanged?.Invoke(transform);
     }
 
-    internal void UpdateRealMousePosition(Vector2 position, float distanceToPlayer)
+    public void UpdateRealMousePosition(Vector2 position)
     {
         lastPos = position;
-        lastDist = distanceToPlayer;
-        UpdateCrossAirPosition(position, distanceToPlayer);
+        lastDist = CalculateDistanceToPlayer();
+        UpdateCrossAirPosition(lastPos, lastDist);
+    }
+
+    private float CalculateDistanceToPlayer()
+    {
+        return plane;
     }
 
     private void FixedUpdate()
