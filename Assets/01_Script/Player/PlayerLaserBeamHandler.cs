@@ -11,8 +11,11 @@ public class PlayerLaserBeamHandler : MonoBehaviour
     [SerializeField] bool isBeaming;
     [SerializeField] bool isSpecial;
 
-    [SerializeField] PlayerAttackSlot currentBeamDrawer;
-    [SerializeField] PlayerAttackSlot specialBeamDrawer;
+    [SerializeField] PlayerAttackSlot currentBeamSlot;
+    [SerializeField] PlayerAttackSlot specialBeamSlot;
+
+    [SerializeField] BeamController beamController;
+    [SerializeField] BeamController specialBeamController;
 
     public event Action<EnemyVulnerability> onVulnerabilityShot;
 
@@ -22,11 +25,22 @@ public class PlayerLaserBeamHandler : MonoBehaviour
         if (playerAttackSlot.AttackType == AttackType.Special)
         {
             isSpecial = true;
-            specialBeamDrawer = playerAttackSlot;
+            specialBeamSlot = playerAttackSlot;
+            specialBeamController = Instantiate(playerAttackSlot.BeamPrefab, transform).GetComponent<BeamController>();
+            specialBeamController.StartBeam();
+        }
+        else if (playerAttackSlot == currentBeamSlot)
+        {
+
+            beamController.StartBeam();
         }
         else
         {
-            this.currentBeamDrawer = playerAttackSlot;
+            this.currentBeamSlot = playerAttackSlot;
+            Destroy(beamController?.gameObject);
+
+            beamController = Instantiate(playerAttackSlot.BeamPrefab, transform).GetComponent<BeamController>();
+            beamController.StartBeam();
         }
     }
 
@@ -35,6 +49,8 @@ public class PlayerLaserBeamHandler : MonoBehaviour
         isBeaming = false;
         isSpecial = false;
         currentDistance = 0;
+
+        beamController.StopBeam();
     }
 
     private void FixedUpdate()
@@ -42,6 +58,14 @@ public class PlayerLaserBeamHandler : MonoBehaviour
         if (isBeaming)
         {
             Grow();
+            if (isSpecial)
+            {
+                specialBeamController.UpdateSize(currentDistance);
+            }
+            else
+            {
+                beamController.UpdateSize(currentDistance);
+            }
         }
     }
 
